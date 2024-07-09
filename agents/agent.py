@@ -1,8 +1,11 @@
 from toolbox.toolbox import Toolbox
 from prompts.prompts import agent_system_prompt_template
 from models.Ollama_models import OllamaModel
+from models.Openai_models import Openai_model
+from termcolor import colored
+
 class Agent:
-    def __init__(self,model_name,tools,model_service,stop=None):
+    def __init__(self,model_service,model_name,tools,stop=None):
         '''
         Initialise the parameters from tools and a model for the agent
         Parameters:
@@ -39,7 +42,33 @@ class Agent:
                 system_prompt=agent_system_prompt,
                 temperature=0,
                 stop=self.stop)
-                
-            )
+        else:
+            model_instance= Openai_model(
+                model=self.model_name,
+                system_prompt=agent_system_prompt,
+                temperature=0                
+            ) 
+        response_dict = model_instance.generate_text(prompt=prompt)
+        return response_dict
+    def work(self,prompt):
+        response_dict= self.think(prompt)
+        tool_choice=response_dict.get("tool_choice")
+        tool_input=response_dict.get("tool_input")
+        response=""
+        for tool in self.tools:
+            if tool.__name__== tool_choice:
+                response=tool(tool_input)
+                print(colored(response, 'cyan'))
+                return
+                # leave with a tool reply
+
+        print(colored(tool_input, 'cyan'))
+        
+        return
+        #leave with a direct query with no-tool
+            
+
+    
+            
 
 
