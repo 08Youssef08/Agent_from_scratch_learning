@@ -35,7 +35,7 @@ class Agent:
 
         '''
         description_tools= self.prepare_tools()
-        agent_system_prompt= agent_system_prompt_template.format(description_tools)
+        agent_system_prompt= agent_system_prompt_template.format(tool_descriptions=description_tools)
         if self.model_service == OllamaModel:
             model_instance=self.model_service(
                 model=self.model_name,
@@ -44,7 +44,7 @@ class Agent:
                 stop=self.stop)
         else:
             model_instance= Openai_model(
-                model=self.model_name,
+                model_name=self.model_name,
                 system_prompt=agent_system_prompt,
                 temperature=0                
             ) 
@@ -66,6 +66,7 @@ class Agent:
         
         return
         #leave with a direct query with no-tool
+
             
 
     

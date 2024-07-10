@@ -31,9 +31,10 @@ class Openai_model:
     "stream": False,
     "temperature": self.temperature,
   }
-        response_dict= requests.post(self.model_endpoint,headers=self.header,data=json.dump(payload))
+        response_dict= requests.post(self.model_endpoint,headers=self.header,data=json.dumps(payload))
         response_json= response_dict.json()
-        response= json.load(response_json['choices'][0]['message']['content'])
+        print(response_json)
+        response= json.loads(response_json['choices'][0]['message']['content'])
         print(F"\n\nResponse from OpenAI model: {response}")
         return response
 
